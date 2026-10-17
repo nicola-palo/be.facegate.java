@@ -1,5 +1,6 @@
 package com.home.facevpn.face;
 
+import com.home.facevpn.auth.FaceAuthenticator;
 import com.home.facevpn.camera.CameraService;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -14,10 +15,12 @@ public class FaceCommands {
 
     private final CameraService camera;
     private final FaceDetector faceDetector;
+    private final FaceEmbedder faceEmbedder;
 
-    public FaceCommands(CameraService camera, FaceDetector faceDetector) {
+    public FaceCommands(CameraService camera, FaceDetector faceDetector, FaceEmbedder faceEmbedder) {
         this.camera = camera;
         this.faceDetector = faceDetector;
+        this.faceEmbedder = faceEmbedder;
     }
 
     @Command(name = "detect", description = "Capture a frame, detect faces and save the annotated image to faces.png")
@@ -33,6 +36,27 @@ public class FaceCommands {
             }
             Imgcodecs.imwrite("faces.png", frame);
             return "Faces detected: " + faces.rows() + " (saved to faces.png)";
+        } finally {
+            camera.close();
+        }
+    }
+
+    @Command(name = "similarity", description = "Capture two frames and print the cosine similarity between their face embeddings")
+    public String similarity() throws InterruptedException {
+        camera.open(0);
+        try {
+            Mat frame1 = camera.grabFrame();
+            Thread.sleep(500);
+            Mat frame2 = camera.grabFrame();
+            Mat faces1 = faceDetector.detect(frame1);
+            Mat faces2 = faceDetector.detect(frame2);
+            if (faces1.rows() == 0 || faces2.rows() == 0) {
+                return "No face detected in one of the two frames";
+            }
+            float[] e1 = faceEmbedder.embed(frame1, faces1.row(0));
+            float[] e2 = faceEmbedder.embed(frame2, faces2.row(0));
+            double sim = FaceAuthenticator.cosineSimilarity(e1, e2);
+            return "Embedding size: " + e1.length + " | cosine similarity: " + String.format("%.3f", sim);
         } finally {
             camera.close();
         }
