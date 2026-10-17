@@ -1,14 +1,19 @@
 package com.home.facevpn.ui;
 
+import com.home.facevpn.vpn.VpnTunnel;
 import org.springframework.shell.core.command.annotation.Argument;
 import org.springframework.shell.core.command.annotation.Command;
 import org.springframework.stereotype.Component;
-
+import java.io.IOException;
 
 @Component
 public class VpnCommands {
 
-	private volatile boolean active = false;
+	private final VpnTunnel tunnel;
+
+	public VpnCommands(VpnTunnel tunnel) {
+		this.tunnel = tunnel;
+	}
 
 	@Command(name = "vpn", description = "Active/Deactive VPN with FaceID")
 	public String vpn(
@@ -16,24 +21,32 @@ public class VpnCommands {
 		return switch (action.toLowerCase()) {
 			case "on" -> turnOn();
 			case "off" -> turnOff();
-			case "toggle" -> active ? turnOff() : turnOn();
+			case "toggle" -> tunnel.isActive() ? turnOff() : turnOn();
             default -> "Action don't valid: '" + action + "' (use on, off or toggle)";
 		};
 	}
 
 	private String turnOn() {
-		if (active) {
+		if (tunnel.isActive()) {
 			return "VPN is already active";
 		}
-		active = true;
-		return "VPN is active";
+		try {
+			tunnel.up();
+			return "VPN is active";
+		} catch (IOException | InterruptedException e) {
+			return "Error with activation VPN: " + e.getMessage();
+		}
 	}
 
 	private String turnOff() {
-		if (!active) {
-			return "VPN is already deactivate";
+		if (!tunnel.isActive()) {
+			return "VPN is already inactive";
 		}
-		active = false;
-		return "VPN is deactivate";
+		try {
+			tunnel.down();
+			return "VPN is inactive";
+		} catch (IOException | InterruptedException e) {
+			return "Error with inactive VPN: " + e.getMessage();
+		}
 	}
 }
