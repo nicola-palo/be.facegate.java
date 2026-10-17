@@ -2,9 +2,7 @@ package com.home.facevpn.vpn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component
 public class FakeTunnel implements VpnTunnel {
 
     private static final Logger log = LoggerFactory.getLogger(FakeTunnel.class);

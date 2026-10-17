@@ -12,13 +12,13 @@ public class WireGuardTunnel implements VpnTunnel{
     }
 
     @Override
-    public void up() throws IOException, InterruptedException{
-        run("wg-quick", "down", interfaceName);
+    public void up() throws IOException, InterruptedException {
+        run("sudo", "-n", "wg-quick", "up", interfaceName);
     }
 
     @Override
     public void down() throws IOException, InterruptedException {
-        run("wg-quick", "down", interfaceName);
+        run("sudo", "-n", "wg-quick", "down", interfaceName);
     }
 
     @Override
@@ -33,6 +33,8 @@ public class WireGuardTunnel implements VpnTunnel{
         }
     }
 
+    // Requires a targeted passwordless sudoers rule, e.g. /etc/sudoers.d/facevpn:
+    // nicola ALL=(root) NOPASSWD: /usr/bin/wg-quick up wg0, /usr/bin/wg-quick down wg0
     private static void run(String... cmd) throws IOException, InterruptedException {
         Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
         String output = new String(p.getInputStream().readAllBytes());
