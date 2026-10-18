@@ -1,4 +1,4 @@
-package com.home.facevpn.auth;
+package com.home.facegate.auth;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

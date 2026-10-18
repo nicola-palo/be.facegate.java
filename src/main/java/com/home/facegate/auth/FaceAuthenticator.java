@@ -1,4 +1,4 @@
-package com.home.facevpn.auth;
+package com.home.facegate.auth;
 
 public class FaceAuthenticator {
 

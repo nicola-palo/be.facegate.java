@@ -1,10 +1,10 @@
-package com.home.facevpn;
+package com.home.facegate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FaceVpnApplicationTests {
+class FaceGateApplicationTests {
 
 	@Test
 	void contextLoads() {

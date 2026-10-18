@@ -1,6 +1,6 @@
-package com.home.facevpn.auth;
+package com.home.facegate.auth;
 
-import com.home.facevpn.face.FaceEmbedder;
+import com.home.facegate.face.FaceEmbedder;
 import org.opencv.core.Mat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class EnrollmentService {
 
     private static final Logger log = LoggerFactory.getLogger(EnrollmentService.class);
 
-    private static final Path DATA_DIR = Path.of(System.getProperty("user.home"), ".facevpn");
+    private static final Path DATA_DIR = Path.of(System.getProperty("user.home"), ".facegate");
     private static final Path KEY_FILE = DATA_DIR.resolve("key.bin");
     private static final Path TEMPLATE_FILE = DATA_DIR.resolve("template.bin");
     private static final int IV_LENGTH = 12;

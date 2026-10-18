@@ -1,4 +1,4 @@
-package com.home.facevpn.face;
+package com.home.facegate.face;
 
 import org.opencv.core.Mat;
 import org.opencv.objdetect.FaceRecognizerSF;
@@ -27,6 +27,7 @@ public class FaceEmbedder {
 
     private FaceRecognizerSF ensureRecognizer() {
         if (recognizer == null) {
+            OpenCvNative.load();
             if (!Files.exists(MODEL)) {
                 throw new IllegalStateException("Model not found: " + MODEL.toAbsolutePath());
             }
