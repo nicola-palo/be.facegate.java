@@ -1,0 +1,7 @@
+target/
+.idea/
+.git/
+.mvn/
+*.png
+*.md
+selfie*
